@@ -4,8 +4,8 @@
   "description": "node application for tinder",
   "main": "index.js",
   "scripts": {
-    "start":"node src/app.js",
-    "dev" : "nodemon src/app.js"
+    "start": "node src/app.js",
+    "dev": "nodemon src/app.js"
   },
   "author": "Arulmurugan M",
   "license": "ISC",
