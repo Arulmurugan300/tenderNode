@@ -1,59 +1,39 @@
 const express = require('express');
 
 const app = express();
-const {userAuth} = require('./middleware.js/auth')
-
-//type 4 
-app.use("/user",userAuth)
-
-app.use("/admin",(req,res,next)=>{
-  console.log("admin");
-  res.send("admin call success")  
-})
-//type 1 middleware
-app.use((req,res,next)=>{
-  if(req.query.name !== 'arul')
-    res.status(401).send("not auth");
-  else
-    next();
-},
-(req,res)=>{
-  res.send("success call")
-})
-//type 2 middleware
-app.post('/user',(req,res,next)=>{
-  if(req.query.name !== 'arul'){  
-    res.status(401).send("unautheried user");
+// error handling wrong way
+app.use('/',(err,req,res,next)=>{
+  if(err){
+    res.send("error da arull")
   }
-  else
-  next();
 })
-app.use("/user",userAuth,
-(res,req)=>{
-  req.send("success msg send")
+app.use('/user',(req,res)=>{
+  throw new Error("error");
+  res.send("success");
 })
 
-//type 3
-app.use('/user',userAuth, (req,res)=>{
-  res.send("success auth")
+//error handling correct way
+app.use('/user',(req,res)=>{
+  throw new Error("error pa")
+  res.send("success")
 })
 
-//use all() //path based . not for global level
-app.all("/user",(req,res,next)=>{
-  if(req.query.name !== 'arul')
-    res.status(401).send('unauth from all()')
-  else
-    next();
-  },
-(req,res)=>{
-    res.send("succes")
+app.use('/',(err,req,res,next)=>{
+  if(err){
+    res.send("error da arull")
+  }
 })
 
-//
 
-app.use("/user/data",userAuth,
-(res,req)=>{
-  req.send("success msg send22")
+
+//type 2  always best practice for error handling
+app.use('/user',(req,res,next)=>{
+  try{
+    throw new Error("error da arullll");
+  }
+  catch(err){
+    res.send("error:");
+  }
 })
 
 app.listen(4000,()=>{
