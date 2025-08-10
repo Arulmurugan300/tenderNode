@@ -85,3 +85,13 @@ const profile = async (req, res) => {
   }
 }
 module.exports.profile = profile;
+
+const feed = async (req, res) => {
+  try {
+    res.send('working file');
+  }
+  catch (err) {
+    res.status(400).send("error somplace")
+  }
+}
+module.exports.feed = feed;
