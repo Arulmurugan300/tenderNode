@@ -2,7 +2,7 @@
 const { User } = require('../model/user')
 const bcrypt = require('bcrypt');
 const { signInValidator } = require('../utils/validators')
-
+const jwt = require('jsonwebtoken');
 const getUser = async (req, res) => {
   try {
     const response = await User.find();
@@ -59,3 +59,29 @@ const updateUser = async (req, res) => {
   }
 }
 module.exports.updateUser = updateUser;
+
+const profile = async (req, res) => {
+  try {
+    const { access_token } = req?.cookies;
+
+    if (access_token) {
+      const decoded = await jwt.verify(access_token, "morgan101");
+      const { _id } = decoded;
+
+      if (_id) {
+        const user = await User.findById({ _id });
+        return res.send("cookie succcess" + user);
+      }
+      else {
+        return res.status(404).send("no profile is there")
+      }
+    }
+    else {
+      return res.status(404).send("not auth")
+    }
+  }
+  catch (err) {
+    res.status(400).send(err.message)
+  }
+}
+module.exports.profile = profile;

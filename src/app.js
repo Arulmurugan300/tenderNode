@@ -1,8 +1,11 @@
 const express = require('express');
 const app = express();
+const cookieParser = require('cookie-parser');
 const { connectDB } = require('./config/dataBase')
 const v1 = require('./routes/v1');
-app.use(express.json())
+
+app.use(express.json());
+app.use(cookieParser());
 
 app.use('/v1', v1);
 
@@ -14,6 +17,5 @@ connectDB().then((res) => {
 })
   .catch((err) => {
     console.log("DB not sync correctly");
-
   })
 
