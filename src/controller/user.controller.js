@@ -1,5 +1,7 @@
 
 const { User } = require('../model/user')
+const bcrypt = require('bcrypt');
+const { signInValidator } = require('../utils/validators')
 
 const getUser = async (req, res) => {
   try {
@@ -15,9 +17,15 @@ module.exports.getUser = getUser;
 
 const createUser = async (req, res) => {
   try {
+    signInValidator(req.body);
 
-    console.log(req.body);
-    const newUser = new User(req.body);
+    const { firstName, LastName, emailId, password } = req.body;
+    const encrypt = await bcrypt.hash(password, 10);
+
+    if (encrypt.length == 0) {
+      throw new Error("Enter correct password");
+    }
+    const newUser = new User({ password: encrypt, firstName, emailId, LastName });
     const savedUser = await newUser.save();
     res.status(201).send(savedUser);
   }
@@ -34,7 +42,7 @@ const updateUser = async (req, res) => {
     const updateData = req.body;
     console.log(updateData, "asas");
 
-    const alloedData = ['age', 'gender', 'password', 'firstName', 'LastName', 'id'];
+    const alloedData = ['age', 'gender', 'firstName', 'LastName', 'id'];
     const isAllowed = Object.keys(updateData).every((key) => {
       console.log(key);
 
