@@ -1,7 +1,6 @@
 const validator = require('validator');
 
 const signInValidator = (req) => {
-  console.log("100011111", validator.isEmail(req.emailId), !validator.isStrongPassword(req.password))
   if (!validator.isEmail(req.emailId)) {
     throw new Error("Enter valid email");
   }

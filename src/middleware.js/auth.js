@@ -8,6 +8,7 @@ const userAuth = async (req, res, next) => {
       const decrypt = await jwt.verify(access_token, 'morgan101');
       const { _id } = decrypt;
       const user = await User.findById({ _id });
+      req.user = user;
       if (!user) {
         throw new Error("user not valid");
       }

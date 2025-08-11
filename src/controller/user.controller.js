@@ -3,10 +3,10 @@ const { User } = require('../model/user')
 const bcrypt = require('bcrypt');
 const { signInValidator } = require('../utils/validators')
 const jwt = require('jsonwebtoken');
+
 const getUser = async (req, res) => {
   try {
     const response = await User.find();
-    console.log(response, "res1111")
     res.send(response);
   }
   catch (err) {
@@ -30,7 +30,6 @@ const createUser = async (req, res) => {
     res.status(201).send(savedUser);
   }
   catch (err) {
-    console.log('errrrrrr', err.message, "errrsss")
     res.status(400).send(err.message)
   }
 }
@@ -40,7 +39,6 @@ module.exports.createUser = createUser
 const updateUser = async (req, res) => {
   try {
     const updateData = req.body;
-    console.log(updateData, "asas");
 
     const alloedData = ['age', 'gender', 'firstName', 'LastName', 'id'];
     const isAllowed = Object.keys(updateData).every((key) => {
@@ -88,10 +86,16 @@ module.exports.profile = profile;
 
 const feed = async (req, res) => {
   try {
-    res.send('working file');
+    const { user } = req;
+    if (user) {
+      return res.send("cookie succcess" + user);
+    }
+    else {
+      return res.status(404).send("no profile is there")
+    }
   }
   catch (err) {
-    res.status(400).send("error somplace")
+    res.status(400).send(err.message)
   }
 }
 module.exports.feed = feed;

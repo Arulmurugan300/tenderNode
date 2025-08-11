@@ -15,10 +15,10 @@ const logIn = async (req, res) => {
     const isValid = await bcrypt.compare(password, user.password);
 
     if (isValid) {
-      const jwttoken = await jwt.sign({ _id: user._id }, 'morgan101');
+      const jwttoken = await user.getJwt();
       return res.cookie('access_token', jwttoken, {
         expires: new Date(Date.now() + 60000)
-      }).send("logIn successfully");
+      }).send("logIn successfully" + jwttoken);
     }
     else {
       return res.status(400).send("Wrong password");
