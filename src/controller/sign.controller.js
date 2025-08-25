@@ -17,8 +17,8 @@ const logIn = async (req, res) => {
     if (isValid) {
       const jwttoken = await user.getJwt();
       return res.cookie('access_token', jwttoken, {
-        expires: new Date(Date.now() + 60000)
-      }).send("logIn successfully" + jwttoken);
+        expires: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000)
+      }).json({ success: "logIn successfully" });
     }
     else {
       return res.status(400).send("Wrong password");

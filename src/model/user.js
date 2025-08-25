@@ -9,7 +9,7 @@ const userSchema = new mongoose.Schema({
     unique: true,
     minLength: 4,
   },
-  LastName: {
+  lastName: {
     type: String,
     trim: true
   },
@@ -20,9 +20,6 @@ const userSchema = new mongoose.Schema({
     trim: true,
     maxLength: 40,
     validate: (value) => {
-      // if (!value.includes('@gmail.com')) {
-      //   throw new Error("Email is not valid")
-      // }
       if (!validate.isEmail(value))
         throw new Error("Email is not valid")
     }
@@ -40,24 +37,16 @@ const userSchema = new mongoose.Schema({
     type: String,
     validate: (value) => {
       console.log(value, "valsss");
-      // if(value.length >2){
-      //   throw new Error("Maximunm 2 inputs only")
-      // }
       if (!['male', 'female', 'others'].includes(value)) {
         throw new Error('Give a proper gender ')
       }
     }
-  },
-  age: {
-    type: Number,
-    min: 18,
-    max: [110, 'Enter your correct age']
   }
 }, { timestamps: true });
 
 userSchema.methods.getJwt = async function () {
   const user = this;
-  const token = await jwt.sign({ _id: user._id }, 'arul123', { expiresIn: "7d" })
+  const token = await jwt.sign({ _id: user._id }, 'Arul@9786110529', { expiresIn: "7d" })
   return token;
 };
 userSchema.methods.validatePassword = async function (passwordbyUser) {

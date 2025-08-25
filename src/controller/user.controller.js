@@ -19,18 +19,25 @@ const createUser = async (req, res) => {
   try {
     signInValidator(req.body);
 
-    const { firstName, LastName, emailId, password } = req.body;
+    const { firstName, lastName, emailId, password } = req.body;
     const encrypt = await bcrypt.hash(password, 10);
 
     if (encrypt.length == 0) {
       throw new Error("Enter correct password");
     }
-    const newUser = new User({ password: encrypt, firstName, emailId, LastName });
+    const newUser = new User({ password: encrypt, firstName, emailId, lastName });
     const savedUser = await newUser.save();
-    res.status(201).send(savedUser);
+    const responseUser = {
+      firstName: savedUser.firstName,
+      lastName: savedUser.lastName,
+      id: savedUser._id,
+      emailId: savedUser.emailId,
+      success: "SignIn successfully"
+    }
+    res.status(201).json(responseUser);
   }
   catch (err) {
-    res.status(400).send(err.message)
+    res.status(400).json(err.message)
   }
 }
 
@@ -40,7 +47,7 @@ const updateUser = async (req, res) => {
   try {
     const updateData = req.body;
 
-    const alloedData = ['age', 'gender', 'firstName', 'LastName', 'id'];
+    const alloedData = ['gender', 'firstName', 'lastName'];
     const isAllowed = Object.keys(updateData).every((key) => {
       console.log(key);
 
@@ -63,7 +70,7 @@ const profile = async (req, res) => {
     const { access_token } = req?.cookies;
 
     if (access_token) {
-      const decoded = await jwt.verify(access_token, "morgan101");
+      const decoded = await jwt.verify(access_token, "arul123");
       const { _id } = decoded;
 
       if (_id) {
